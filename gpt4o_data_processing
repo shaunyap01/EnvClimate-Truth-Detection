@@ -1,0 +1,16 @@
+import pandas as pd
+
+# Calculate average scores for readability, polarity, and subjectivity
+df['gpt-4o_readability_avg'] = df[['gpt-4o_readability1', 'gpt-4o_readability2', 'gpt-4o_readability3']].mean(axis=1)
+df['gpt-4o_polarity_avg'] = df[['gpt-4o_polarity1', 'gpt-4o_polarity2', 'gpt-4o_polarity3']].mean(axis=1) / 100  # Normalize polarity
+df['gpt-4o_subjectivity_avg'] = df[['gpt-4o_subjectivity1', 'gpt-4o_subjectivity2', 'gpt-4o_subjectivity3']].mean(axis=1) / 100  # Normalize subjectivity
+
+# Remove the original columns for Flesch-Kincaid Ease, Polarity, and Subjectivity
+df.drop(columns=['flesch_kincaid_ease', 'polarity', 'subjectivity'], inplace=True)
+
+# Reorder columns for the final DataFrame structure
+df = df[['statement_clean', 'gpt-4o_readability_avg', 'gpt-4o_polarity_avg', 'gpt-4o_subjectivity_avg', 'target']]
+
+# Save the cleaned and processed DataFrame to a new CSV file
+output_file_path = 'clean_gpt4o_data.csv'
+df.to_csv(output_file_path, index=False)
